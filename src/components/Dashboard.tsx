@@ -1,0 +1,87 @@
+"use client";
+
+import { useTransactionStore } from "@/store/useTransactionStore";
+import { useEffect, useState } from "react";
+import { ArrowDownCircle, ArrowUpCircle, Wallet } from "lucide-react";
+
+export default function Dashboard() {
+  const transactions = useTransactionStore((state) => state.transactions);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 animate-pulse h-[116px]"></div>
+        ))}
+      </div>
+    );
+  }
+
+  // Calculate Total Assets (All Time)
+  const totalAssets = transactions.reduce((acc, curr) => {
+    return curr.type === "income" ? acc + curr.amount : acc - curr.amount;
+  }, 0);
+
+  // Calculate Current Month Income & Expense
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  const currentMonthTransactions = transactions.filter((t) => {
+    const transactionDate = new Date(t.date);
+    return (
+      transactionDate.getMonth() === currentMonth &&
+      transactionDate.getFullYear() === currentYear
+    );
+  });
+
+  const monthlyIncome = currentMonthTransactions
+    .filter((t) => t.type === "income")
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  const monthlyExpense = currentMonthTransactions
+    .filter((t) => t.type === "expense")
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {/* Total Assets */}
+      <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 flex flex-col justify-between">
+        <div className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 mb-2">
+          <Wallet className="w-5 h-5 text-blue-500" />
+          <h3 className="text-sm font-medium">总资产</h3>
+        </div>
+        <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+          ¥{totalAssets.toFixed(2)}
+        </p>
+      </div>
+
+      {/* Monthly Income */}
+      <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 flex flex-col justify-between">
+        <div className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 mb-2">
+          <ArrowUpCircle className="w-5 h-5 text-green-500" />
+          <h3 className="text-sm font-medium">当月总收入</h3>
+        </div>
+        <p className="text-3xl font-bold text-green-600 dark:text-green-500">
+          ¥{monthlyIncome.toFixed(2)}
+        </p>
+      </div>
+
+      {/* Monthly Expense */}
+      <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 flex flex-col justify-between">
+        <div className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 mb-2">
+          <ArrowDownCircle className="w-5 h-5 text-red-500" />
+          <h3 className="text-sm font-medium">当月总支出</h3>
+        </div>
+        <p className="text-3xl font-bold text-red-600 dark:text-red-500">
+          ¥{monthlyExpense.toFixed(2)}
+        </p>
+      </div>
+    </div>
+  );
+}
