@@ -37,14 +37,14 @@ export default function AddTransactionForm() {
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 mb-8">
-      <h2 className="text-xl font-semibold mb-6 text-neutral-800 dark:text-neutral-100 flex items-center gap-2">
+    <div className="bg-white dark:bg-neutral-800 p-5 md:p-6 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 mb-6 md:mb-8">
+      <h2 className="text-lg md:text-xl font-semibold mb-5 md:mb-6 text-neutral-800 dark:text-neutral-100 flex items-center gap-2">
         <PlusCircle className="w-5 h-5" />
         添加记录
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex gap-4 mb-4">
+        <div className="flex gap-3 md:gap-4 mb-4">
           <label className="flex-1 cursor-pointer">
             <input
               type="radio"
@@ -133,7 +133,7 @@ export default function AddTransactionForm() {
 
         <button
           type="submit"
-          className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium p-3 rounded-lg transition-colors focus:ring-4 focus:ring-blue-500/50"
+          className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium p-3.5 md:p-3 rounded-lg transition-colors focus:ring-4 focus:ring-blue-500/50 active:scale-[0.98]"
         >
           保存记录
         </button>
